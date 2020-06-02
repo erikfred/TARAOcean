@@ -13,6 +13,7 @@ try:
     import argparse
     import cartopy
     import cartopy.crs as ccrs
+    import pickle
     # Import local modules
     sys.path.append(os.path.abspath('shared'))
     import directory, TARA
@@ -22,27 +23,31 @@ except ImportError:
 
 # Directory management
 main_dir = os.path.abspath('.').split('/')[-1]
-output_dir = f"../{main_dir}_output/"
+output_dir = f"../{main_dir}_output/Ecoli_5ed69e4d9ca60/"
 fig_dir = output_dir + "figures/"
 directory.make_dir(fig_dir)
 
 # request filename from user
 parser = argparse.ArgumentParser()
-parser.add_argument('-f', '--filename', default='alldata.csv', type=str,
-    help="Name of environmental and adundance data file (csv)")
+parser.add_argument('-f', '--filename', default='dataProc.p', type=str,
+    help="Name of environmental and adundance data file (.p)")
 parser.add_argument('-r', '--rank', default='Superkingdom', type=str,
     help="Taxonomic rank of interest")
 args = parser.parse_args()
 filename = args.filename
+if not filename[-2:] == '.p':
+    filename = filename + '.p' # adds extension if needed
 tax_rank = args.rank.capitalize() # to ensure string match with column headers
 
 # more directory management
 rank_dir = fig_dir + tax_rank + "/"
 directory.make_dir(rank_dir)
 
-# load  csv into DataFrame, if it exists and is accessible
+# load  pickle file, if it exists and is accessible
 try:
-    df_all = pd.read_csv(output_dir + filename)
+    my_pick = open(output_dir + filename, 'rb')
+    df_all = pickle.load(my_pick)
+    my_pick.close()
 except FileNotFoundError:
     print(f"File: {args.filename} does not exist")
     sys.exit()
