@@ -4,23 +4,41 @@ Skills used.
     argparse.
     subprocesses.
     local modules.
+    matplotlib and cartopy for beautiful figures
     Github repository management.
 ===============================================================================
 Access
 clone using: git clone https://github.com/delasislas/TARAOcean.git
 
-TO USE:
+PREPARATION:
+You will need to install cartopy for map plots
+    Several ways to do this, most straightforward is run: conda install cartopy
+    Note that this will install dependencies, some of which may need updating
 You may need to update modules like pandas.
-You will need to run: conda install cartopy
-    This is for plotting purposes
+Ensure shared/OGArequest.sh is executable
+    Navigate to the shared folder.
+    Type chmod +x OGArequest.sh
 
+TO USE:
+Scripts should be run in the order
+    1) collection.py
+    2) dataManipulation.py
+    3) abundance_plots.py
 
-NOTICE:
-Navigate to the shared folder.
-Type chmod +x OGArequest.sh
-This lets python run the shell script as an executable.
+===============================================================================
+*abundance_plots.py
+Usage: python abundance_plots.py -f filename -r rank
+Example: python abundance_plots.py -f dataProc -r Genus
 
+filename: output picklefile from dataManipulation.py
+    Default to datProc.p if excluded
+rank: taxonomic rank from which to make plots
+    Default to Superfamily if excluded
 
+For any number of directories in TARAOcean_output, this script will generate a
+sample map, a scatterplot of total abundance vs. environmental parameters, and
+global abundance plots of each member of the rank of choice (both as a combined
+plot and as individual plots)
 ===============================================================================
 *collection.py
 Usage: python collection.py -j jobname -f filename
@@ -53,6 +71,3 @@ Sends request as a query to OGA.
 Returns with the data from the server and stores in output as jobname_uniqueid.
 Displays an error, that doesn't affect the outcome.
 ===============================================================================
-To do:
-Modify dataManipulation.py to allow for different sequences.
-Figure out ways to make plots to summarize relationships.
